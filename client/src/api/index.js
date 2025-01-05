@@ -6,6 +6,7 @@ const responseHandler = (response) => {
 
 const BOARD_LIST_URL = () => `/board/list`
 
+// 게시물 전체 조회 api
 export const getBoardList = async () => {
   try {
     const response = await api.get(BOARD_LIST_URL())
