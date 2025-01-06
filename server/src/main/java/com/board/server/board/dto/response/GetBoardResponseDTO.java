@@ -7,20 +7,18 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
 @Getter
-public class GetBoardListResponseDTO extends ResponseDTO {
+public class GetBoardResponseDTO extends ResponseDTO {
 
-    private List<BoardListItem> boardListItemList;
+    private BoardListItem board;
 
-    private GetBoardListResponseDTO(List<BoardListItem> boardListItem) {
+    private GetBoardResponseDTO(BoardListItem board) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
-        this.boardListItemList= boardListItem;
+        this.board = board;
     }
 
-    public static ResponseEntity<GetBoardListResponseDTO> success(List<BoardListItem> boardListItems) {
-        GetBoardListResponseDTO result = new GetBoardListResponseDTO(boardListItems);
+    public static ResponseEntity<GetBoardResponseDTO> success(BoardListItem board) {
+        GetBoardResponseDTO result = new GetBoardResponseDTO(board);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

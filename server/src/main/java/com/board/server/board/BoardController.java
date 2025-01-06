@@ -1,11 +1,16 @@
 package com.board.server.board;
 
-import com.board.server.board.dto.response.GetBoardListResponseDto;
+import com.board.server.board.dto.request.PatchBoardRequestDTO;
+import com.board.server.board.dto.request.PostBoardRequestDTO;
+import com.board.server.board.dto.response.GetBoardListResponseDTO;
+import com.board.server.board.dto.response.GetBoardResponseDTO;
+import com.board.server.board.dto.response.PatchBoardResponseDTO;
+import com.board.server.board.dto.response.PostBoardResponseDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/board")
 public class BoardController {
 
     private final BoardService boardService;
@@ -17,9 +22,36 @@ public class BoardController {
     /**
      * 게시글 전체 조회
      */
-    @GetMapping("/board/list")
-    public ResponseEntity<GetBoardListResponseDto> getBoardList() {
-        ResponseEntity<GetBoardListResponseDto> result = boardService.getBoardList();
+    @GetMapping("/list")
+    public ResponseEntity<GetBoardListResponseDTO> getBoardList() {
+        ResponseEntity<GetBoardListResponseDTO> result = boardService.getBoardList();
+        return result;
+    }
+
+    /**
+     * 게시글 등록
+     */
+    @PostMapping("/write")
+    public ResponseEntity<PostBoardResponseDto> postBoard(@RequestBody PostBoardRequestDTO boardRequestDto) {
+        ResponseEntity<PostBoardResponseDto> result = boardService.postBoard(boardRequestDto);
+        return result;
+    }
+
+    /**
+     * 게시글 수정
+     */
+    @PatchMapping("/edit/{id}")
+    public ResponseEntity<PatchBoardResponseDTO> updateBoard(@PathVariable Long id, @RequestBody PatchBoardRequestDTO board) {
+        ResponseEntity<PatchBoardResponseDTO> result = boardService.updateBoard(id, board);
+        return result;
+    }
+
+    /**
+     * 게시글 상세 조회
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<GetBoardResponseDTO> getBoard(@PathVariable Long id) {
+        ResponseEntity<GetBoardResponseDTO> result = boardService.getBoard(id);
         return result;
     }
 }
