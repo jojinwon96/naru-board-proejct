@@ -5,14 +5,8 @@
 
       <BoardListItem v-for="board in paginatedBoards" :key="board.id" :board="board" />
 
-      <q-pagination
-        class="justify-center q-py-md"
-        v-model="currentPage"
-        :max="totalPages"
-        :max-pages="5"
-        direction-links
-        gutter="20px"
-      />
+      <q-pagination class="justify-center q-py-md" v-model="currentPage" :max="totalPages" :max-pages="5" boundary-links
+        gutter="20px" />
     </q-page-container>
   </q-page>
 </template>
@@ -20,12 +14,31 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import BoardListItem from 'src/components/board/BoardListItem.vue'
-import { getBoardList } from 'src/api'
+import { getBoardList, postBoardPaginationList } from 'src/api'
 
-const currentPage = ref(1)
+const currentPage = ref(2)
 const pageSize = ref(5)
 const totalPages = ref(1)
 const boardList = ref([])
+
+const boardPaginationRequest = ref({
+  page: currentPage.value,
+  size: pageSize.value
+})
+
+// 게시글 전체 페이징 조회 처리 함수
+const getBoardPaginationListResponse = (requestBody) => {
+  postBoardPaginationList(requestBody)
+    .then((responseBody) => {
+      if (!responseBody) return
+      console.log(responseBody);
+      const { code, total, boardListItemList } = responseBody
+      if (code === 'SU') {
+        console.log('total : ', total);
+        console.log('list : ', boardListItemList);
+      }
+    })
+}
 
 // 게시글 전체 조회 처리 함수
 const getBoardListResponse = () => {
@@ -55,6 +68,7 @@ const paginatedBoards = computed(() => {
 
 onMounted(() => {
   getBoardListResponse()
+  getBoardPaginationListResponse(boardPaginationRequest.value);
 })
 </script>
 

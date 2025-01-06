@@ -36,7 +36,7 @@ public class BoardRepository {
     }
 
     /**
-     * 게시글 하나 삽입
+     * 단일 게시글 삽입
      */
     public int save(PostBoardRequestDTO board) {
         String sql = "INSERT INTO tbl_board (title, content, create_date) VALUES (?, ?, ?)";
@@ -47,7 +47,7 @@ public class BoardRepository {
     }
 
     /**
-     * 게시글 하나 수정
+     * 단일 게시글 수정
      */
     public int update(Long id, PatchBoardRequestDTO board) {
         String sql = "UPDATE tbl_board SET title = ?, content = ? WHERE id = ?";
@@ -57,6 +57,9 @@ public class BoardRepository {
         return jdbcTemplate.update(sql, board.getTitle(), board.getContent(), id);
     }
 
+    /**
+     * 단일 게시글 조회
+     */
     public BoardListItem findById(Long id) {
         String sql = "SELECT id, title, content, create_date FROM tbl_board WHERE id = ?";
 
@@ -70,5 +73,27 @@ public class BoardRepository {
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
+    /**
+     * 게시글 페이징 처리
+     */
+    public List<BoardListItem> findAllByPage(int page, int size) {
+        int offset = (page - 1) * size;
+        String sql = "SELECT id, title, content, create_date FROM tbl_board LIMIT ? OFFSET ?";
+        RowMapper<BoardListItem> rowMapper = (rs, rowNum) -> new BoardListItem(
+                rs.getLong("id"),
+                rs.getString("title"),
+                rs.getString("content"),
+                rs.getTimestamp("create_date").toLocalDateTime()
+        );
+        return jdbcTemplate.query(sql, rowMapper, size, offset);
+    }
+
+    /**
+     * 게시글 전체 갯수
+     */
+    public int boardCount() {
+        String sql = "SELECT count(*) FROM tbl_board";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
 
 }

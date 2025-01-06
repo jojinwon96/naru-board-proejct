@@ -1,11 +1,9 @@
 package com.board.server.board;
 
+import com.board.server.board.dto.request.PostBoardPaginationRequestDTO;
 import com.board.server.board.dto.request.PatchBoardRequestDTO;
 import com.board.server.board.dto.request.PostBoardRequestDTO;
-import com.board.server.board.dto.response.GetBoardListResponseDTO;
-import com.board.server.board.dto.response.GetBoardResponseDTO;
-import com.board.server.board.dto.response.PatchBoardResponseDTO;
-import com.board.server.board.dto.response.PostBoardResponseDto;
+import com.board.server.board.dto.response.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,6 +50,16 @@ public class BoardController {
     @GetMapping("/{id}")
     public ResponseEntity<GetBoardResponseDTO> getBoard(@PathVariable Long id) {
         ResponseEntity<GetBoardResponseDTO> result = boardService.getBoard(id);
+        return result;
+    }
+
+    /**
+     * 게시글 페이징 조회
+     */
+    @PostMapping("/page")
+    public ResponseEntity<PostBoardPaginationResponseDTO> getBoardPagination(@RequestBody PostBoardPaginationRequestDTO request) {
+        System.out.println("request = " + request);
+        ResponseEntity<PostBoardPaginationResponseDTO> result = boardService.getBoardPagination(request);
         return result;
     }
 }

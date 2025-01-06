@@ -10,10 +10,21 @@ const responseHandler = (response) => {
   return response.data
 }
 
+const BOARD_PAGE_URL = () => `/board/page`
 const BOARD_LIST_URL = () => `/board/list`
 const BOARD_WRITE_URL = () => `/board/write`
 const BOARD_EDIT_URL = (id) => `/board/edit/${id}`
 const BOARD_URL = (id) => `/board/${id}`
+
+// 게시물 페이징 조회
+export const postBoardPaginationList = async (requestBody) => {
+  try {
+    const response = await api.post(BOARD_PAGE_URL(), requestBody, config)
+    return responseHandler(response)
+  } catch (error) {
+    console.error('postBoardPaginationList 처리 실패', error)
+  }
+}
 
 // 게시물 전체 조회 api
 export const getBoardList = async () => {

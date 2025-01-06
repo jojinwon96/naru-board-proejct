@@ -1,12 +1,10 @@
 package com.board.server.board;
 
 import com.board.server.board.dto.object.BoardListItem;
+import com.board.server.board.dto.request.PostBoardPaginationRequestDTO;
 import com.board.server.board.dto.request.PatchBoardRequestDTO;
 import com.board.server.board.dto.request.PostBoardRequestDTO;
-import com.board.server.board.dto.response.GetBoardListResponseDTO;
-import com.board.server.board.dto.response.GetBoardResponseDTO;
-import com.board.server.board.dto.response.PatchBoardResponseDTO;
-import com.board.server.board.dto.response.PostBoardResponseDto;
+import com.board.server.board.dto.response.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -51,5 +49,14 @@ public class BoardService {
     public ResponseEntity<GetBoardResponseDTO> getBoard(Long id){
         BoardListItem board = boardRepository.findById(id);
         return GetBoardResponseDTO.success(board);
+    }
+
+    /**
+     * 게시글 페이징 조회
+     */
+    public ResponseEntity<PostBoardPaginationResponseDTO> getBoardPagination(PostBoardPaginationRequestDTO request){
+        int total = boardRepository.boardCount();
+        List<BoardListItem> list = boardRepository.findAllByPage(request.getPage(), request.getSize());
+        return PostBoardPaginationResponseDTO.success(total, list);
     }
 }
